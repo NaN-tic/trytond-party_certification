@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tryton>
+    <data>
+        <record model="res.group" id="group_certification_admin">
+            <field name="name">Certification Administration</field>
+        </record>
+        <record model="res.user-res.group"
+            id="user_admin_group_certification_admin">
+            <field name="user" ref="res.user_admin"/>
+            <field name="group" ref="group_certification_admin"/>
+        </record>
+
+        <record model="ir.ui.view" id="certification_document_view_list">
+            <field name="model">certification.document</field>
+            <field name="type">tree</field>
+            <field name="name">certification_document_tree</field>
+        </record>
+        <record model="ir.ui.view" id="certification_document_view_form">
+            <field name="model">certification.document</field>
+            <field name="type">form</field>
+            <field name="name">certification_document_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="document_type_view_list">
+            <field name="model">certification.document.type</field>
+            <field name="type">tree</field>
+            <field name="name">document_type_tree</field>
+        </record>
+        <record model="ir.ui.view" id="document_type_view_form">
+            <field name="model">certification.document.type</field>
+            <field name="type">form</field>
+            <field name="name">document_type_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="party_type_view_list">
+            <field name="model">certification.party.type</field>
+            <field name="type">tree</field>
+            <field name="name">party_type_tree</field>
+        </record>
+        <record model="ir.ui.view" id="party_type_view_form">
+            <field name="model">certification.party.type</field>
+            <field name="type">form</field>
+            <field name="name">party_type_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="selection_choice_view_list">
+            <field name="model">certification.selection.choice</field>
+            <field name="type">tree</field>
+            <field name="name">selection_choice_tree</field>
+        </record>
+        <record model="ir.ui.view" id="selection_choice_view_form">
+            <field name="model">certification.selection.choice</field>
+            <field name="type">form</field>
+            <field name="name">selection_choice_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="document_type_party_type_view_list">
+            <field name="model">certification.document.type-certification.party.type</field>
+            <field name="type">tree</field>
+            <field name="name">document_type_party_type_tree</field>
+        </record>
+        <record model="ir.ui.view" id="document_type_party_type_view_form">
+            <field name="model">certification.document.type-certification.party.type</field>
+            <field name="type">form</field>
+            <field name="name">document_type_party_type_form</field>
+        </record>
+
+        <record model="ir.action.act_window" id="act_certification_document_type">
+            <field name="name">Document Type</field>
+            <field name="res_model">certification.document.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_certification_document_type_list">
+            <field name="sequence" eval="10" />
+            <field name="view" ref="document_type_view_list" />
+            <field name="act_window" ref="act_certification_document_type" />
+        </record>
+        <record model="ir.action.act_window.view" id="act_certification_document_type_form">
+            <field name="sequence" eval="20" />
+            <field name="view" ref="document_type_view_form" />
+            <field name="act_window" ref="act_certification_document_type" />
+        </record>
+
+
+        <record model="ir.action.act_window" id="act_certification_party">
+            <field name="name">Party Type</field>
+            <field name="res_model">certification.party.type</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_certification_party_list">
+            <field name="sequence" eval="10" />
+            <field name="view" ref="party_type_view_list" />
+            <field name="act_window" ref="act_certification_party" />
+        </record>
+        <record model="ir.action.act_window.view" id="act_certification_party_form">
+            <field name="sequence" eval="20" />
+            <field name="view" ref="party_type_view_form" />
+            <field name="act_window" ref="act_certification_party" />
+        </record>
+
+        <record model="ir.action.act_window" id="act_certification_document">
+            <field name="name">Documents</field>
+            <field name="res_model">certification.document</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_certification_document_list">
+            <field name="sequence" eval="10" />
+            <field name="view" ref="certification_document_view_list" />
+            <field name="act_window" ref="act_certification_document" />
+        </record>
+        <record model="ir.action.act_window.view" id="act_certification_document_form">
+            <field name="sequence" eval="20" />
+            <field name="view" ref="certification_document_view_form" />
+            <field name="act_window" ref="act_certification_document" />
+        </record>
+
+        <record model="ir.model.button" id="certification_document_approve_button">
+            <field name="name">approve</field>
+            <field name="string">Approve</field>
+            <field name="model" search="[('model', '=', 'certification.document')]"/>
+        </record>
+        <record model="ir.model.button" id="certification_document_reject_button">
+            <field name="name">reject</field>
+            <field name="string">Reject</field>
+            <field name="model" search="[('model', '=', 'certification.document')]"/>
+        </record>
+        <record model="ir.model.button" id="certification_document_expire_button">
+            <field name="name">expire</field>
+            <field name="string">Expire</field>
+            <field name="model" search="[('model', '=', 'certification.document')]"/>
+        </record>
+        <record model="ir.model.button-res.group" id="certification_document_approve_button_group_certification">
+            <field name="button" ref="certification_document_approve_button" />
+            <field name="group" ref="party_certification.group_certification_admin" />
+        </record>
+        <record model="ir.model.button-res.group" id="certification_document_reject_button_group_certification">
+            <field name="button" ref="certification_document_reject_button" />
+            <field name="group" ref="party_certification.group_certification_admin" />
+        </record>
+        <record model="ir.model.button-res.group" id="certification_document_expire_button_group_certification">
+            <field name="button" ref="certification_document_expire_button" />
+            <field name="group" ref="party_certification.group_certification_admin" />
+        </record>
+        <record model="ir.model.access" id="access_certification">
+            <field name="model" search="[('model', '=', 'certification.document')]" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_delete" eval="False" />
+        </record>
+        <record model="ir.model.access" id="access_certification_admin">
+            <field name="model" search="[('model', '=', 'certification.document')]" />
+            <field name="group" ref="group_certification_admin" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_delete" eval="True" />
+        </record>
+
+        <menuitem id="menu_document_type_view" sequence="2" icon="tryton-list" action="act_certification_document_type" parent="party.menu_configuration" />
+        <menuitem id="menu_party_type_view" sequence="2" icon="tryton-list" action="act_certification_party" parent="party.menu_configuration" />
+        <menuitem id="menu_document_view" sequence="2" icon="tryton-list" action="act_certification_document" parent="party.menu_party" />
+    </data>
+</tryton>

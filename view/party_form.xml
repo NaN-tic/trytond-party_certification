@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+copyright notices and license types. -->
+<data>
+    <xpath expr="/form/notebook" position="inside">
+        <page string="Documentation" id="documentation">
+            <field name="party_types" colspan="4"/>
+            <field name="documents" colspan="4"/>
+            <label name="valid_documents"/>
+            <field name="valid_documents"/>
+        </page>
+    </xpath>
+</data>

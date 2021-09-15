@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- The COPYRIGHT file at the top level of this repository contains the full
+     copyright notices and license terms. -->
+<form col="6">
+    <label name="name"/>
+    <field name="name"/>
+    <label name="type"/>
+    <field name="type"/>
+    <newline/>
+    <field name="selection_choices" colspan="2"/>
+</form>
