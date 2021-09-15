@@ -99,10 +99,7 @@ class Document(Workflow, ModelSQL, ModelView):
             return self.document_type.type
 
     def get_choices(self, name):
-        print(self.document_type)
-        print(self.document_type.selection_choices)
         if self.document_type and self.document_type.selection_choices:
-            print([c.id for c in self.document_type.selection_choices])
             return [c.id for c in self.document_type.selection_choices]
 
 
