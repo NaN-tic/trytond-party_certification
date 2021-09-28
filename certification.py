@@ -1,53 +1,54 @@
+from datetime import date
 from trytond.model import (
     ModelSQL, ModelView, fields, DeactivableMixin, Workflow)
-from trytond.pool import Pool, PoolMeta
-from trytond.i18n import gettext
-from trytond.exceptions import UserError
-from trytond.pyson import Eval, Bool, If
+from trytond.pyson import Eval, Bool, And
+from trytond.pool import PoolMeta
 
 
 class Document(Workflow, ModelSQL, ModelView):
     "Certification Document"
     __name__ = 'certification.document'
-    party = fields.Many2One('party.party', "Party")
+    party = fields.Many2One('party.party', "Party", required=True)
     document_type = fields.Many2One(
-        'certification.document.type', "Document Type")
-    type = fields.Function(fields.Char('Type'), 'get_type')
+        'certification.document.type', "Document Type", required=True)
+    type = fields.Char('Type', depends=['document_type'])
     text = fields.Char('Text', states={
-        'invisible': Eval('type') != 'text'
+        'invisible': Eval('type') != 'text',
+        'required': And(
+                Eval('state') != 'waiting-approval',
+                Eval('type') == 'text')
         }, depends=['type', 'document_type'])
     attachment = fields.Binary('Attachment', states={
-        'invisible': Eval('type') != 'attachment'
+        'invisible': Eval('type') != 'attachment',
+        'required': And(
+                Eval('state') != 'waiting-approval',
+                Eval('type') == 'attachment')
         }, depends=['type', 'document_type'])
     selection = fields.Many2One('certification.selection.choice', 'Selection',
         domain=[(
             'id', 'in', Eval('choices')
         )],
         states={
-            'invisible': Eval('type') != 'selection'
+            'invisible': Eval('type') != 'selection',
+            'required': And(
+                Eval('state') != 'waiting-approval',
+                Eval('type') == 'selection')
         }, depends=['type', 'choices', 'document_type'])
     choices = fields.Function(fields.Many2Many(
         'certification.selection.choice', None, None, 'Choices'), 'get_choices')
-    from_date = fields.Date('From Date', required=True,
-        domain=[
-            If(Bool(Eval('from_date')) & Bool(Eval('to_date')),
-                ('from_date', '<=', Eval('to_date')), ())],
+    expiration_date = fields.Date('Expiration Date',
         states={
             'readonly': Eval('state') != 'waiting-approval',
-        }, depends=['state', 'to_date', 'from_date'])
-    to_date = fields.Date('To Date', required=True,
-        domain=[
-            If(Bool(Eval('from_date')) & Bool(Eval('to_date')),
-                ('from_date', '<=', Eval('to_date')), ())],
-        states={
-            'readonly': Eval('state') != 'waiting-approval',
-        }, depends=['state', 'to_date', 'from_date'])
+            'required': And(Eval('state') != 'waiting-approval', Bool(
+                Eval('required_expiration_date')))
+        }, depends=['state', 'required_expiration_date'])
     state = fields.Selection([
             ('waiting-approval', 'Waiting Approval'),
             ('approved', 'Approved'),
             ('rejected', 'Rejected'),
             ('expirated', 'Expirated'),
             ], 'State', readonly=True, required=True)
+    required_expiration_date = fields.Boolean('Required Expiration Date')
 
     @classmethod
     def __setup__(cls):
@@ -56,6 +57,7 @@ class Document(Workflow, ModelSQL, ModelView):
             ('waiting-approval', 'approved'),
             ('waiting-approval', 'rejected'),
             ('waiting-approval', 'expirated'),
+            ('approved', 'expirated'),
             }
         cls._buttons.update({
             'approve': {
@@ -71,6 +73,16 @@ class Document(Workflow, ModelSQL, ModelView):
                 'depends': ['state'],
                 },
             })
+
+    @fields.depends('party', 'document_type', '_parent_party.party_types')
+    def on_change_with_required_expiration_date(self):
+        if not self.party:
+            return
+        for pt in self.party.party_types:
+            for dt in pt.document_types:
+                if (dt.document_type == self.document_type
+                        and dt.expiration_date):
+                    return True
 
     @staticmethod
     def default_state():
@@ -94,19 +106,36 @@ class Document(Workflow, ModelSQL, ModelView):
     def expire(cls, documents):
         pass
 
-    def get_type(self, name):
+    @fields.depends('document_type')
+    def on_change_with_type(self):
         if self.document_type:
             return self.document_type.type
 
-    def get_choices(self, name):
+    @fields.depends('document_type')
+    def get_choices(self, name=None):
         if self.document_type and self.document_type.selection_choices:
             return [c.id for c in self.document_type.selection_choices]
+
+    @fields.depends('document_type')
+    def on_change_with_choices(self):
+        return self.get_choices()
+
+    @classmethod
+    def check_expiration_date_cron(cls):
+        today = date.today()
+        records = cls.search([
+            ('expiration_date', '<', today),
+            ['OR',
+                ('state', '=', 'waiting-approval'),
+                ('state', '=', 'approved'),
+                ]])
+        cls.expire(records)
 
 
 class DocumentType(ModelSQL, ModelView):
     "Certification Document Type"
     __name__ = 'certification.document.type'
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     type = fields.Selection([
         ('text', 'Text'),
         ('selection', 'Selection'),
@@ -135,7 +164,7 @@ class DocumentTypePartyType(ModelSQL, ModelView):
 class PartyType(ModelSQL, ModelView):
     "Certification Party Type"
     __name__ = 'certification.party.type'
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     document_types = fields.One2Many(
         'certification.document.type-certification.party.type',
         'party_type', 'Document Types')
@@ -144,7 +173,7 @@ class PartyType(ModelSQL, ModelView):
 class SelectionChoice(DeactivableMixin, ModelSQL, ModelView):
     "Certification Selection Choice"
     __name__ = 'certification.selection.choice'
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
 
 
 class DocumentTypeSelectionChoice(ModelSQL, ModelView):
@@ -179,3 +208,15 @@ class PartyTypeParty(ModelSQL, ModelView):
         if not required_documents:
             return True
         return False
+
+
+class Cron(metaclass=PoolMeta):
+    __name__ = 'ir.cron'
+
+    @classmethod
+    def __setup__(cls):
+        super(Cron, cls).__setup__()
+        cls.method.selection.append(
+            ('certification.document|check_expiration_date_cron',
+            "Check Expiration Date"),
+            )

@@ -7,10 +7,8 @@
     <newline/>
     <label name="document_type"/>
     <field name="document_type"/>
-    <label name="from_date"/>
-    <field name="from_date"/>
-    <label name="to_date"/>
-    <field name="to_date"/>
+    <label name="expiration_date"/>
+    <field name="expiration_date"/>
     <newline/>
     <label name="text"/>
     <field name="text"/>

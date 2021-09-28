@@ -8,6 +8,7 @@ from . import party
 
 def register():
     Pool.register(
+        certification.Cron,
         certification.Document,
         certification.DocumentType,
         certification.DocumentTypePartyType,

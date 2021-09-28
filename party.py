@@ -21,3 +21,16 @@ class Party(metaclass=PoolMeta):
                 break
         else:
             return True
+
+    @fields.depends('party_types', 'documents')
+    def on_change_party_types(self):
+        pool = Pool()
+        Document = pool.get('certification.document')
+        current_types = [d.document_type for d in self.documents]
+        for party_type in self.party_types:
+            for document_type in party_type.document_types:
+                if document_type.document_type not in current_types:
+                    document = Document()
+                    document.document_type = document_type.document_type.id
+                    document.party = self.id
+                    self.documents += (document,)

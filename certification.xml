@@ -154,6 +154,13 @@
             <field name="perm_delete" eval="True" />
         </record>
 
+        <record model="ir.cron" id="cron_document_expiration_date_check">
+            <field name="active" eval="True" />
+            <field name="interval_number" eval="24"/>
+            <field name="interval_type">hours</field>
+            <field name="method">certification.document|check_expiration_date_cron</field>
+        </record>
+
         <menuitem id="menu_document_type_view" sequence="2" icon="tryton-list" action="act_certification_document_type" parent="party.menu_configuration" />
         <menuitem id="menu_party_type_view" sequence="2" icon="tryton-list" action="act_certification_party" parent="party.menu_configuration" />
         <menuitem id="menu_document_view" sequence="2" icon="tryton-list" action="act_certification_document" parent="party.menu_party" />
