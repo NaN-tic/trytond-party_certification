@@ -8,6 +8,9 @@ copyright notices and license types. -->
             <field name="documents" colspan="4"/>
             <label name="valid_documents"/>
             <field name="valid_documents"/>
+            <group col="-1" colspan="3" id="buttons">
+                <button name="generate_party_documents"/>
+            </group>
         </page>
     </xpath>
 </data>

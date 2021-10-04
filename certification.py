@@ -11,7 +11,8 @@ class Document(Workflow, ModelSQL, ModelView):
     party = fields.Many2One('party.party', "Party", required=True)
     document_type = fields.Many2One(
         'certification.document.type', "Document Type", required=True)
-    type = fields.Char('Type', depends=['document_type'])
+    type = fields.Function(fields.Char('Type', depends=['document_type']),
+        'get_type')
     text = fields.Char('Text', states={
         'invisible': Eval('type') != 'text',
         'required': And(
@@ -105,6 +106,11 @@ class Document(Workflow, ModelSQL, ModelView):
     @Workflow.transition('expirated')
     def expire(cls, documents):
         pass
+
+    @fields.depends('document_type')
+    def get_type(self, name):
+        if self.document_type:
+            return self.document_type.type
 
     @fields.depends('document_type')
     def on_change_with_type(self):

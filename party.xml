@@ -8,5 +8,10 @@
             <field name="inherit" ref="party.party_view_form"/>
             <field name="name">party_form</field>
         </record>
+         <record model="ir.model.button" id="generate_party_documents_button">
+            <field name="name">generate_party_documents</field>
+            <field name="string">Generate Documents</field>
+            <field name="model" search="[('model', '=', 'party.party')]" />
+        </record>
     </data>
 </tryton>
