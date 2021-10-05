@@ -2,7 +2,9 @@ from datetime import date
 from trytond.model import (
     ModelSQL, ModelView, fields, DeactivableMixin, Workflow)
 from trytond.pyson import Eval, Bool, And
-from trytond.pool import PoolMeta
+from trytond.pool import Pool, PoolMeta
+from trytond.exceptions import UserError
+from trytond.i18n import gettext
 
 
 class Document(Workflow, ModelSQL, ModelView):
@@ -11,20 +13,20 @@ class Document(Workflow, ModelSQL, ModelView):
     party = fields.Many2One('party.party', "Party", required=True)
     document_type = fields.Many2One(
         'certification.document.type', "Document Type", required=True)
-    type = fields.Function(fields.Char('Type', depends=['document_type']),
-        'get_type')
+    type = fields.Function(fields.Char('Type'),
+        'on_change_with_type')
     text = fields.Char('Text', states={
         'invisible': Eval('type') != 'text',
         'required': And(
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'text')
-        }, depends=['type', 'document_type'])
+        }, depends=['type'])
     attachment = fields.Binary('Attachment', states={
         'invisible': Eval('type') != 'attachment',
         'required': And(
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'attachment')
-        }, depends=['type', 'document_type'])
+        }, depends=['type'])
     selection = fields.Many2One('certification.selection.choice', 'Selection',
         domain=[(
             'id', 'in', Eval('choices')
@@ -34,14 +36,16 @@ class Document(Workflow, ModelSQL, ModelView):
             'required': And(
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'selection')
-        }, depends=['type', 'choices', 'document_type'])
+        }, depends=['type', 'choices'])
     choices = fields.Function(fields.Many2Many(
-        'certification.selection.choice', None, None, 'Choices'), 'get_choices')
+        'certification.selection.choice', None, None, 'Choices'),
+        'on_change_with_choices')
     expiration_date = fields.Date('Expiration Date',
         states={
             'readonly': Eval('state') != 'waiting-approval',
             'required': And(Eval('state') != 'waiting-approval', Bool(
-                Eval('required_expiration_date')))
+                Eval('required_expiration_date'))),
+            'invisible': ~Bool(Eval('required_expiration_date'))
         }, depends=['state', 'required_expiration_date'])
     state = fields.Selection([
             ('waiting-approval', 'Waiting Approval'),
@@ -49,7 +53,9 @@ class Document(Workflow, ModelSQL, ModelView):
             ('rejected', 'Rejected'),
             ('expirated', 'Expirated'),
             ], 'State', readonly=True, required=True)
-    required_expiration_date = fields.Boolean('Required Expiration Date')
+    required_expiration_date = fields.Function(
+        fields.Boolean('Required Expiration Date'),
+        'on_change_with_required_expiration_date')
 
     @classmethod
     def __setup__(cls):
@@ -76,8 +82,8 @@ class Document(Workflow, ModelSQL, ModelView):
             })
 
     @fields.depends('party', 'document_type', '_parent_party.party_types')
-    def on_change_with_required_expiration_date(self):
-        if not self.party:
+    def on_change_with_required_expiration_date(self, name=None):
+        if not self.party or not self.document_type:
             return
         for pt in self.party.party_types:
             for dt in pt.document_types:
@@ -93,7 +99,14 @@ class Document(Workflow, ModelSQL, ModelView):
     @ModelView.button
     @Workflow.transition('approved')
     def approve(cls, documents):
-        pass
+        pool = Pool()
+        today = pool.get('ir.date').today()
+        for document in documents:
+            if document.expiration_date:
+                if document.expiration_date < today:
+                    raise UserError(gettext(
+                        'party_certification.expired_document',
+                        document=document))
 
     @classmethod
     @ModelView.button
@@ -108,33 +121,24 @@ class Document(Workflow, ModelSQL, ModelView):
         pass
 
     @fields.depends('document_type')
-    def get_type(self, name):
+    def on_change_with_type(self, name=None):
         if self.document_type:
             return self.document_type.type
 
     @fields.depends('document_type')
-    def on_change_with_type(self):
-        if self.document_type:
-            return self.document_type.type
-
-    @fields.depends('document_type')
-    def get_choices(self, name=None):
+    def on_change_with_choices(self, name=None):
         if self.document_type and self.document_type.selection_choices:
             return [c.id for c in self.document_type.selection_choices]
-
-    @fields.depends('document_type')
-    def on_change_with_choices(self):
-        return self.get_choices()
+        return[]
 
     @classmethod
     def check_expiration_date_cron(cls):
-        today = date.today()
+        pool = Pool()
+        today = pool.get('ir.date').today()
         records = cls.search([
             ('expiration_date', '<', today),
-            ['OR',
-                ('state', '=', 'waiting-approval'),
-                ('state', '=', 'approved'),
-                ]])
+            ('state', 'in', ['waiting-approval', 'approved'])
+        ])
         cls.expire(records)
 
 

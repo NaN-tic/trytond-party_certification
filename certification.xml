@@ -156,8 +156,10 @@
 
         <record model="ir.cron" id="cron_document_expiration_date_check">
             <field name="active" eval="True" />
-            <field name="interval_number" eval="24"/>
-            <field name="interval_type">hours</field>
+            <field name="interval_number" eval="1"/>
+            <field name="interval_type">days</field>
+            <field name="hour" eval="0"/>
+            <field name="minute" eval="0"/>
             <field name="method">certification.document|check_expiration_date_cron</field>
         </record>
 
