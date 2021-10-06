@@ -45,7 +45,6 @@ class Document(Workflow, ModelSQL, ModelView):
             'readonly': Eval('state') != 'waiting-approval',
             'required': And(Eval('state') != 'waiting-approval', Bool(
                 Eval('required_expiration_date'))),
-            'invisible': ~Bool(Eval('required_expiration_date'))
         }, depends=['state', 'required_expiration_date'])
     state = fields.Selection([
             ('waiting-approval', 'Waiting Approval'),
