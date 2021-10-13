@@ -1,0 +1,232 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:certification.document,attachment:"
+msgid "Attachment"
+msgstr "Adjunto"
+
+msgctxt "field:certification.document,choices:"
+msgid "Choices"
+msgstr "Opciones"
+
+msgctxt "field:certification.document,document_type:"
+msgid "Document Type"
+msgstr "Tipo de Documento"
+
+msgctxt "field:certification.document,expiration_date:"
+msgid "Expiration Date"
+msgstr "Fecha de Caducidad"
+
+msgctxt "field:certification.document,party:"
+msgid "Party"
+msgstr "Terceros"
+
+msgctxt "field:certification.document,required_expiration_date:"
+msgid "Required Expiration Date"
+msgstr "Fecha de Caducidad Requerida"
+
+msgctxt "field:certification.document,selection:"
+msgid "Selection"
+msgstr "Selección"
+
+msgctxt "field:certification.document,state:"
+msgid "State"
+msgstr "Estado"
+
+msgctxt "field:certification.document,text:"
+msgid "Text"
+msgstr "Texto"
+
+msgctxt "field:certification.document,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt "field:certification.document.type,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:certification.document.type,selection_choices:"
+msgid "Selection Choices"
+msgstr "Opciones de Selección"
+
+msgctxt "field:certification.document.type,type:"
+msgid "Type"
+msgstr "Tipo"
+
+msgctxt ""
+"field:certification.document.type-certification.party.type,document_type:"
+msgid "Document Type"
+msgstr "Tipo de documento"
+
+msgctxt ""
+"field:certification.document.type-certification.party.type,expiration_date:"
+msgid "Expiration Date"
+msgstr "Fecha de Caducidad"
+
+msgctxt ""
+"field:certification.document.type-certification.party.type,party_type:"
+msgid "Party Type"
+msgstr "Tipo de Tercero"
+
+msgctxt "field:certification.document.type-certification.party.type,required:"
+msgid "Required"
+msgstr "Requerido"
+
+msgctxt "field:certification.party.type,document_types:"
+msgid "Document Types"
+msgstr "Tipos de Documento"
+
+msgctxt "field:certification.party.type,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:certification.party.type-party.party,party:"
+msgid "Party"
+msgstr "Tercero"
+
+msgctxt "field:certification.party.type-party.party,party_type:"
+msgid "Party Type"
+msgstr "Tipo de Tercero"
+
+msgctxt "field:certification.party.type-party.party,valid:"
+msgid "Valid"
+msgstr "Valido"
+
+msgctxt "field:certification.selection.choice,name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt ""
+"field:certification.type-certification.selection.choice,document_type:"
+msgid "Document Type"
+msgstr "Tipo de Documento"
+
+msgctxt ""
+"field:certification.type-certification.selection.choice,selection_choice:"
+msgid "Selection Choice"
+msgstr "Opciones de Selección"
+
+msgctxt "field:party.party,documents:"
+msgid "Documents"
+msgstr "Documentos"
+
+msgctxt "field:party.party,party_types:"
+msgid "Party Type"
+msgstr "Tipo de Tercero"
+
+msgctxt "field:party.party,valid_documents:"
+msgid "Valid Documents"
+msgstr "Documentos Válidos"
+
+msgctxt "model:certification.document,name:"
+msgid "Certification Document"
+msgstr "Docuemento de Certificación"
+
+msgctxt "model:certification.document.type,name:"
+msgid "Certification Document Type"
+msgstr "Tipo de Documento"
+
+msgctxt "model:certification.document.type-certification.party.type,name:"
+msgid "Document Type - Party Type"
+msgstr "Tipo de Documento - Tipo de Tercero"
+
+msgctxt "model:certification.party.type,name:"
+msgid "Certification Party Type"
+msgstr "Tipo de Tercero"
+
+msgctxt "model:certification.party.type-party.party,name:"
+msgid "Party Type - Party"
+msgstr "TIpo de Tercero - Tercero"
+
+msgctxt "model:certification.selection.choice,name:"
+msgid "Certification Selection Choice"
+msgstr "Opción de Selección"
+
+msgctxt "model:certification.type-certification.selection.choice,name:"
+msgid "Document Type - Selection Choice"
+msgstr "Tipo de Documento - Opciones de Selección"
+
+msgctxt "model:ir.action,name:act_certification_document"
+msgid "Documents"
+msgstr "Documentos"
+
+msgctxt "model:ir.action,name:act_certification_document_type"
+msgid "Document Type"
+msgstr "Tipo de Documento"
+
+msgctxt "model:ir.action,name:act_certification_party"
+msgid "Party Type"
+msgstr "Tipo de tercero"
+
+msgctxt "model:ir.message,text:expired_document"
+msgid "Document \"%(document)s\" is expired"
+msgstr "El Documento \"&(document)s\" está caducado"
+
+msgctxt "model:ir.model.button,string:certification_document_approve_button"
+msgid "Approve"
+msgstr "Aprobar"
+
+msgctxt "model:ir.model.button,string:certification_document_expire_button"
+msgid "Expire"
+msgstr "Caducar"
+
+msgctxt "model:ir.model.button,string:certification_document_reject_button"
+msgid "Reject"
+msgstr "Rechazar"
+
+msgctxt "model:ir.model.button,string:generate_party_documents_button"
+msgid "Generate Documents"
+msgstr "Generar Documentos"
+
+msgctxt "model:ir.ui.menu,name:menu_document_type_view"
+msgid "Document Type"
+msgstr "Tipo de Documento"
+
+msgctxt "model:ir.ui.menu,name:menu_document_view"
+msgid "Documents"
+msgstr "Documentos"
+
+msgctxt "model:ir.ui.menu,name:menu_party_type_view"
+msgid "Party Type"
+msgstr "Tipo de Tercero"
+
+msgctxt "model:res.group,name:group_certification_admin"
+msgid "Certification Administration"
+msgstr "Administración de certificados"
+
+msgctxt "selection:certification.document,state:"
+msgid "Approved"
+msgstr "Aprobado"
+
+msgctxt "selection:certification.document,state:"
+msgid "Expired"
+msgstr "Caducado"
+
+msgctxt "selection:certification.document,state:"
+msgid "Rejected"
+msgstr "Rechazado"
+
+msgctxt "selection:certification.document,state:"
+msgid "Waiting Approval"
+msgstr "Esperando Aprobación"
+
+msgctxt "selection:certification.document.type,type:"
+msgid "Attachment"
+msgstr "Adjunto"
+
+msgctxt "selection:certification.document.type,type:"
+msgid "Selection"
+msgstr "Selección"
+
+msgctxt "selection:certification.document.type,type:"
+msgid "Text"
+msgstr "Texto"
+
+msgctxt "selection:ir.cron,method:"
+msgid "Check Expiration Date"
+msgstr "Comprovar Fecha de Caducidad"
+
+msgctxt "view:party.party:"
+msgid "Documentation"
+msgstr "Documentación"
