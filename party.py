@@ -21,9 +21,9 @@ class Party(metaclass=PoolMeta):
 
     def get_valid_documents(self, name):
         pool = Pool()
-        partyTypeParty = pool.get('certification.party.type-party.party')
+        PartyTypeParty = pool.get('certification.party.type-party.party')
 
-        data = partyTypeParty.search(['party', '=', self.id])
+        data = PartyTypeParty.search(['party', '=', self.id])
         for type in data:
             if not type.valid:
                 break
@@ -35,10 +35,12 @@ class Party(metaclass=PoolMeta):
     def generate_party_documents(cls, records):
         pool = Pool()
         Document = pool.get('certification.document')
-        cls.save(records)
         for record in records:
             to_delete = []
-            current_types = [d.document_type for d in record.documents]
+            current_types = [
+                d.document_type for d in record.documents
+                if d.state in ['waiting-approval', 'approved']
+                ]
             expected_types = []
             for party_type in record.party_types:
                 for document_type in party_type.document_types:
@@ -50,7 +52,6 @@ class Party(metaclass=PoolMeta):
                         and not document.selection
                         and document.document_type not in expected_types):
                     to_delete.append(document)
-                    current_types.remove(document.document_type)
             Document.delete(to_delete)
 
             for document_type in expected_types:

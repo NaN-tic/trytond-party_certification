@@ -50,7 +50,7 @@ class Document(Workflow, ModelSQL, ModelView):
             ('waiting-approval', 'Waiting Approval'),
             ('approved', 'Approved'),
             ('rejected', 'Rejected'),
-            ('expirated', 'Expirated'),
+            ('expired', 'Expired'),
             ], 'State', readonly=True, required=True)
     required_expiration_date = fields.Function(
         fields.Boolean('Required Expiration Date'),
@@ -62,8 +62,8 @@ class Document(Workflow, ModelSQL, ModelView):
         cls._transitions |= {
             ('waiting-approval', 'approved'),
             ('waiting-approval', 'rejected'),
-            ('waiting-approval', 'expirated'),
-            ('approved', 'expirated'),
+            ('waiting-approval', 'expired'),
+            ('approved', 'expired'),
             }
         cls._buttons.update({
             'approve': {
@@ -115,7 +115,7 @@ class Document(Workflow, ModelSQL, ModelView):
 
     @classmethod
     @ModelView.button
-    @Workflow.transition('expirated')
+    @Workflow.transition('expired')
     def expire(cls, documents):
         pass
 
