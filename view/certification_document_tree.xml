@@ -5,4 +5,5 @@
     <field name="party"/>
     <field name="document_type"/>
     <field name="state"/>
+    <field name="expiration_date"/>
 </tree>
