@@ -1,4 +1,3 @@
-from datetime import date
 from trytond.model import (
     ModelSQL, ModelView, fields, DeactivableMixin, Workflow)
 from trytond.pyson import Eval, Bool, And
