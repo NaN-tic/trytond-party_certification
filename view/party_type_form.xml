@@ -4,6 +4,5 @@
 <form col="6">
     <label name="name"/>
     <field name="name"/>
-    <label name="document_types"/>
-    <field name="document_types"/>
+    <field name="document_types" colspan="6"/>
 </form>

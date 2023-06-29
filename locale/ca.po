@@ -12,7 +12,7 @@ msgstr "Opcions"
 
 msgctxt "field:certification.document,document_type:"
 msgid "Document Type"
-msgstr "Tipus de Document"
+msgstr "Tipus de document"
 
 msgctxt "field:certification.document,expiration_date:"
 msgid "Expiration Date"
@@ -24,7 +24,7 @@ msgstr "Tercer"
 
 msgctxt "field:certification.document,required_expiration_date:"
 msgid "Required Expiration Date"
-msgstr "Requereix Data de Caducitat"
+msgstr "Requereix data de caducitat"
 
 msgctxt "field:certification.document,selection:"
 msgid "Selection"
@@ -48,7 +48,7 @@ msgstr "Nom"
 
 msgctxt "field:certification.document.type,selection_choices:"
 msgid "Selection Choices"
-msgstr "Opcions de Selecció"
+msgstr "Opcions de selecció"
 
 msgctxt "field:certification.document.type,type:"
 msgid "Type"
@@ -57,7 +57,7 @@ msgstr "Tipus"
 msgctxt ""
 "field:certification.document.type-certification.party.type,document_type:"
 msgid "Document Type"
-msgstr "Tipus de Document"
+msgstr "Tipus de document"
 
 msgctxt ""
 "field:certification.document.type-certification.party.type,expiration_date:"
@@ -67,7 +67,7 @@ msgstr "Data de caducitat"
 msgctxt ""
 "field:certification.document.type-certification.party.type,party_type:"
 msgid "Party Type"
-msgstr "Tipus de Tercer"
+msgstr "Tipus de tercer"
 
 msgctxt "field:certification.document.type-certification.party.type,required:"
 msgid "Required"
@@ -87,7 +87,7 @@ msgstr "Tercer"
 
 msgctxt "field:certification.party.type-party.party,party_type:"
 msgid "Party Type"
-msgstr "Tipus de Tercer"
+msgstr "Tipus de tercer"
 
 msgctxt "field:certification.party.type-party.party,valid:"
 msgid "Valid"
@@ -100,7 +100,7 @@ msgstr "Nom"
 msgctxt ""
 "field:certification.type-certification.selection.choice,document_type:"
 msgid "Document Type"
-msgstr "Tipus de Document"
+msgstr "Tipus de document"
 
 msgctxt ""
 "field:certification.type-certification.selection.choice,selection_choice:"
@@ -113,11 +113,11 @@ msgstr "Documents"
 
 msgctxt "field:party.party,party_types:"
 msgid "Party Type"
-msgstr "Tipus de Tercer"
+msgstr "Tipus de tercer"
 
 msgctxt "field:party.party,valid_documents:"
 msgid "Valid Documents"
-msgstr "Documents Valids"
+msgstr "Documents vàlids"
 
 msgctxt "model:certification.document,name:"
 msgid "Certification Document"
@@ -129,19 +129,19 @@ msgstr "Tipus de document"
 
 msgctxt "model:certification.document.type-certification.party.type,name:"
 msgid "Document Type - Party Type"
-msgstr "Tipus de document - Tipus de Tercer"
+msgstr "Tipus de document - Tipus de tercer"
 
 msgctxt "model:certification.party.type,name:"
 msgid "Certification Party Type"
-msgstr "Tipus de Tercer"
+msgstr "Tipus de tercer"
 
 msgctxt "model:certification.party.type-party.party,name:"
 msgid "Party Type - Party"
-msgstr "Tipus de Tercer -Tercer"
+msgstr "Tipus de tercer - Tercer"
 
 msgctxt "model:certification.selection.choice,name:"
 msgid "Certification Selection Choice"
-msgstr "Opció de Selecció"
+msgstr "Opció de selecció"
 
 msgctxt "model:certification.type-certification.selection.choice,name:"
 msgid "Document Type - Selection Choice"
@@ -157,7 +157,7 @@ msgstr "Tipus de document"
 
 msgctxt "model:ir.action,name:act_certification_party"
 msgid "Party Type"
-msgstr "Tipus de Tercer"
+msgstr "Tipus de tercer"
 
 msgctxt "model:ir.message,text:expired_document"
 msgid "Document \"%(document)s\" is expired"
@@ -177,11 +177,11 @@ msgstr "Rebutjar"
 
 msgctxt "model:ir.model.button,string:generate_party_documents_button"
 msgid "Generate Documents"
-msgstr "Generar Documents"
+msgstr "Generar documents"
 
 msgctxt "model:ir.ui.menu,name:menu_document_type_view"
 msgid "Document Type"
-msgstr "Tipus de Document"
+msgstr "Tipus de document"
 
 msgctxt "model:ir.ui.menu,name:menu_document_view"
 msgid "Documents"
@@ -189,11 +189,11 @@ msgstr "Documents"
 
 msgctxt "model:ir.ui.menu,name:menu_party_type_view"
 msgid "Party Type"
-msgstr "Tipus de Tercer"
+msgstr "Tipus de tercer"
 
 msgctxt "model:res.group,name:group_certification_admin"
 msgid "Certification Administration"
-msgstr "Administració de Certificats"
+msgstr "Administració de certificats"
 
 msgctxt "selection:certification.document,state:"
 msgid "Approved"
@@ -209,7 +209,7 @@ msgstr "Rebutjat"
 
 msgctxt "selection:certification.document,state:"
 msgid "Waiting Approval"
-msgstr "Esperant Aprovació"
+msgstr "Esperant aprovació"
 
 msgctxt "selection:certification.document.type,type:"
 msgid "Attachment"
