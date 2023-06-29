@@ -12,19 +12,19 @@ msgstr "Opciones"
 
 msgctxt "field:certification.document,document_type:"
 msgid "Document Type"
-msgstr "Tipo de Documento"
+msgstr "Tipo de documento"
 
 msgctxt "field:certification.document,expiration_date:"
 msgid "Expiration Date"
-msgstr "Fecha de Caducidad"
+msgstr "Fecha de caducidad"
 
 msgctxt "field:certification.document,party:"
 msgid "Party"
-msgstr "Terceros"
+msgstr "Tercero"
 
 msgctxt "field:certification.document,required_expiration_date:"
 msgid "Required Expiration Date"
-msgstr "Fecha de Caducidad Requerida"
+msgstr "Fecha de caducidad requerida"
 
 msgctxt "field:certification.document,selection:"
 msgid "Selection"
@@ -48,7 +48,7 @@ msgstr "Nombre"
 
 msgctxt "field:certification.document.type,selection_choices:"
 msgid "Selection Choices"
-msgstr "Opciones de Selección"
+msgstr "Opciones de selección"
 
 msgctxt "field:certification.document.type,type:"
 msgid "Type"
@@ -62,12 +62,12 @@ msgstr "Tipo de documento"
 msgctxt ""
 "field:certification.document.type-certification.party.type,expiration_date:"
 msgid "Expiration Date"
-msgstr "Fecha de Caducidad"
+msgstr "Fecha de caducidad"
 
 msgctxt ""
 "field:certification.document.type-certification.party.type,party_type:"
 msgid "Party Type"
-msgstr "Tipo de Tercero"
+msgstr "Tipo de tercero"
 
 msgctxt "field:certification.document.type-certification.party.type,required:"
 msgid "Required"
@@ -75,7 +75,7 @@ msgstr "Requerido"
 
 msgctxt "field:certification.party.type,document_types:"
 msgid "Document Types"
-msgstr "Tipos de Documento"
+msgstr "Tipos de documento"
 
 msgctxt "field:certification.party.type,name:"
 msgid "Name"
@@ -87,7 +87,7 @@ msgstr "Tercero"
 
 msgctxt "field:certification.party.type-party.party,party_type:"
 msgid "Party Type"
-msgstr "Tipo de Tercero"
+msgstr "Tipo de tercero"
 
 msgctxt "field:certification.party.type-party.party,valid:"
 msgid "Valid"
@@ -100,12 +100,12 @@ msgstr "Nombre"
 msgctxt ""
 "field:certification.type-certification.selection.choice,document_type:"
 msgid "Document Type"
-msgstr "Tipo de Documento"
+msgstr "Tipo de documento"
 
 msgctxt ""
 "field:certification.type-certification.selection.choice,selection_choice:"
 msgid "Selection Choice"
-msgstr "Opciones de Selección"
+msgstr "Opciones de selección"
 
 msgctxt "field:party.party,documents:"
 msgid "Documents"
@@ -113,39 +113,39 @@ msgstr "Documentos"
 
 msgctxt "field:party.party,party_types:"
 msgid "Party Type"
-msgstr "Tipo de Tercero"
+msgstr "Tipo de tercero"
 
 msgctxt "field:party.party,valid_documents:"
 msgid "Valid Documents"
-msgstr "Documentos Válidos"
+msgstr "Documentos válidos"
 
 msgctxt "model:certification.document,name:"
 msgid "Certification Document"
-msgstr "Docuemento de Certificación"
+msgstr "Docuemento de certificación"
 
 msgctxt "model:certification.document.type,name:"
 msgid "Certification Document Type"
-msgstr "Tipo de Documento"
+msgstr "Tipo de documento"
 
 msgctxt "model:certification.document.type-certification.party.type,name:"
 msgid "Document Type - Party Type"
-msgstr "Tipo de Documento - Tipo de Tercero"
+msgstr "Tipo de documento - Tipo de tercero"
 
 msgctxt "model:certification.party.type,name:"
 msgid "Certification Party Type"
-msgstr "Tipo de Tercero"
+msgstr "Tipo de tercero"
 
 msgctxt "model:certification.party.type-party.party,name:"
 msgid "Party Type - Party"
-msgstr "TIpo de Tercero - Tercero"
+msgstr "TIpo de tercero - Tercero"
 
 msgctxt "model:certification.selection.choice,name:"
 msgid "Certification Selection Choice"
-msgstr "Opción de Selección"
+msgstr "Opción de selección"
 
 msgctxt "model:certification.type-certification.selection.choice,name:"
 msgid "Document Type - Selection Choice"
-msgstr "Tipo de Documento - Opciones de Selección"
+msgstr "Tipo de documento - Opciones de selección"
 
 msgctxt "model:ir.action,name:act_certification_document"
 msgid "Documents"
@@ -153,7 +153,7 @@ msgstr "Documentos"
 
 msgctxt "model:ir.action,name:act_certification_document_type"
 msgid "Document Type"
-msgstr "Tipo de Documento"
+msgstr "Tipo de documento"
 
 msgctxt "model:ir.action,name:act_certification_party"
 msgid "Party Type"
@@ -177,11 +177,11 @@ msgstr "Rechazar"
 
 msgctxt "model:ir.model.button,string:generate_party_documents_button"
 msgid "Generate Documents"
-msgstr "Generar Documentos"
+msgstr "Generar documentos"
 
 msgctxt "model:ir.ui.menu,name:menu_document_type_view"
 msgid "Document Type"
-msgstr "Tipo de Documento"
+msgstr "Tipo de documento"
 
 msgctxt "model:ir.ui.menu,name:menu_document_view"
 msgid "Documents"
@@ -189,7 +189,7 @@ msgstr "Documentos"
 
 msgctxt "model:ir.ui.menu,name:menu_party_type_view"
 msgid "Party Type"
-msgstr "Tipo de Tercero"
+msgstr "Tipo de tercero"
 
 msgctxt "model:res.group,name:group_certification_admin"
 msgid "Certification Administration"
@@ -209,7 +209,7 @@ msgstr "Rechazado"
 
 msgctxt "selection:certification.document,state:"
 msgid "Waiting Approval"
-msgstr "Esperando Aprobación"
+msgstr "Esperando aprobación"
 
 msgctxt "selection:certification.document.type,type:"
 msgid "Attachment"
@@ -225,7 +225,7 @@ msgstr "Texto"
 
 msgctxt "selection:ir.cron,method:"
 msgid "Check Expiration Date"
-msgstr "Comprovar Fecha de Caducidad"
+msgstr "Comprovar fecha de caducidad"
 
 msgctxt "view:party.party:"
 msgid "Documentation"

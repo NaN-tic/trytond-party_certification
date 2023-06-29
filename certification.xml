@@ -163,8 +163,8 @@
             <field name="method">certification.document|check_expiration_date_cron</field>
         </record>
 
-        <menuitem id="menu_document_type_view" sequence="2" icon="tryton-list" action="act_certification_document_type" parent="party.menu_configuration" />
-        <menuitem id="menu_party_type_view" sequence="2" icon="tryton-list" action="act_certification_party" parent="party.menu_configuration" />
-        <menuitem id="menu_document_view" sequence="2" icon="tryton-list" action="act_certification_document" parent="party.menu_party" />
+        <menuitem id="menu_document_type_view" sequence="20" icon="tryton-list" action="act_certification_document_type" parent="party.menu_configuration" />
+        <menuitem id="menu_party_type_view" sequence="20" icon="tryton-list" action="act_certification_party" parent="party.menu_configuration" />
+        <menuitem id="menu_document_view" sequence="20" icon="tryton-list" action="act_certification_document" parent="party.menu_party" />
     </data>
 </tryton>

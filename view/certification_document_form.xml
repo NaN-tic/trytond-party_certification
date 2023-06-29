@@ -3,8 +3,7 @@
      copyright notices and license terms. -->
 <form col="6">
     <label name="party"/>
-    <field name="party"/>
-    <newline/>
+    <field name="party" colspan="5"/>
     <label name="document_type"/>
     <field name="document_type"/>
     <label name="expiration_date"/>
@@ -19,7 +18,7 @@
     <label name="selection"/>
     <field name="selection"/>
     <newline/>
-    <group colspan="2" id="buttons">
+    <group col="6" colspan="6" id="buttons">
         <label name="state"/>
         <field name="state"/>
         <button name="expire" icon="tryton-cancel"/>
