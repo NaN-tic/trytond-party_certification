@@ -3,5 +3,8 @@
         <record model="ir.message" id="expired_document">
             <field name="text">Document "%(document)s" is expired</field>
         </record>
+        <record model="ir.message" id="msg_missign_document_type">
+            <field name="text">Missing document type "%(document_type)s" in the "%(party)s"</field>
+        </record>
     </data>
 </tryton>

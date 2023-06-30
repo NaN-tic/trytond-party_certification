@@ -156,7 +156,11 @@ class DocumentType(ModelSQL, ModelView):
             'invisible': Eval('type') != 'selection',
             'required': Eval('type') == 'selection'
         },
-        depends=['type'],)
+        depends=['type'])
+    substitute = fields.Many2One('certification.document.type', 'Substitute',
+        domain=[
+            ('id', '!=', Eval('id', -1)),
+        ], depends=['id'])
 
 
 class DocumentTypePartyType(ModelSQL, ModelView):

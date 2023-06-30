@@ -1,6 +1,8 @@
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.model import ModelView
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 
 class Party(metaclass=PoolMeta):
@@ -11,6 +13,7 @@ class Party(metaclass=PoolMeta):
     documents = fields.One2Many('certification.document', 'party', 'Documents')
     valid_documents = fields.Function(
         fields.Boolean("Valid Documents"), 'get_valid_documents')
+    certification_not_available = fields.Boolean('Not Available')
 
     @classmethod
     def __setup__(cls):
@@ -32,34 +35,47 @@ class Party(metaclass=PoolMeta):
 
     @classmethod
     @ModelView.button
-    def generate_party_documents(cls, records):
+    def generate_party_documents(cls, parties):
         pool = Pool()
         Document = pool.get('certification.document')
-        for record in records:
-            to_delete = []
+
+        to_delete = []
+        documents = []
+        for party in parties:
             current_types = [
-                d.document_type for d in record.documents
+                d.document_type for d in party.documents
                 if d.state in ['waiting-approval', 'approved']
                 ]
-            expected_types = []
-            for party_type in record.party_types:
+            expected_types = set()
+            for party_type in party.party_types:
                 for document_type in party_type.document_types:
-                    expected_types.append(document_type.document_type)
+                    if party.certification_not_available:
+                        doc_type = document_type.document_type.substitute
+                    else:
+                        doc_type = document_type.document_type
+                    if not doc_type:
+                        raise UserError(
+                            gettext('party_certification.msg_missign_document_type',
+                            document_type=document_type.rec_name,
+                            party=party.rec_name))
+                    expected_types.add(doc_type)
 
-            for document in record.documents:
+            for document in party.documents:
                 if (not document.text
                         and not document.attachment
                         and not document.selection
                         and document.document_type not in expected_types):
                     to_delete.append(document)
-            Document.delete(to_delete)
 
             for document_type in expected_types:
                 if document_type not in current_types:
                     document = Document()
-                    document.document_type = document_type.id
-                    document.party = record.id
+                    document.document_type = document_type
+                    document.party = party
                     document.state = 'waiting-approval'
                     document.type = document_type.type
-                    record.documents += (document,)
-        cls.save(records)
+                    documents.append(document)
+                    # party.documents += (document,)
+
+        Document.delete(to_delete)
+        Document.save(documents)
