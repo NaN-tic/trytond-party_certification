@@ -13,7 +13,6 @@ class Party(metaclass=PoolMeta):
     documents = fields.One2Many('certification.document', 'party', 'Documents')
     valid_documents = fields.Function(
         fields.Boolean("Valid Documents"), 'get_valid_documents')
-    certification_not_available = fields.Boolean('Not Available')
 
     @classmethod
     def __setup__(cls):
@@ -26,9 +25,9 @@ class Party(metaclass=PoolMeta):
         pool = Pool()
         PartyTypeParty = pool.get('certification.party.type-party.party')
 
-        data = PartyTypeParty.search(['party', '=', self.id])
-        for type in data:
-            if not type.valid:
+        party_types = PartyTypeParty.search(['party', '=', self.id])
+        for party_type in party_types:
+            if not party_type.valid:
                 break
         else:
             return True
@@ -49,18 +48,19 @@ class Party(metaclass=PoolMeta):
             expected_types = set()
             for party_type in party.party_types:
                 for document_type in party_type.document_types:
-                    if party.certification_not_available:
-                        doc_type = document_type.document_type.substitute
-                    else:
-                        doc_type = document_type.document_type
-                    if not doc_type:
-                        raise UserError(
-                            gettext('party_certification.msg_missign_document_type',
-                            document_type=document_type.rec_name,
-                            party=party.rec_name))
+                    doc_type = document_type.document_type
                     expected_types.add(doc_type)
 
             for document in party.documents:
+                if document.certification_not_available:
+                    doc_type = document.document_type.substitute
+                    if not doc_type:
+                        raise UserError(
+                            gettext('party_certification.msg_missign_document_type',
+                            document_type=document.document_type.rec_name,
+                            party=party.rec_name))
+                    expected_types.add(doc_type)
+
                 if (not document.text
                         and not document.attachment
                         and not document.selection

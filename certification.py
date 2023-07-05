@@ -9,30 +9,41 @@ from trytond.i18n import gettext
 class Document(Workflow, ModelSQL, ModelView):
     "Certification Document"
     __name__ = 'certification.document'
-    party = fields.Many2One('party.party', "Party", required=True)
+    party = fields.Many2One('party.party', "Party", required=True,
+        states={
+            'readonly': Eval('state') != 'waiting-approval',
+        }, depends=['state'])
     document_type = fields.Many2One(
-        'certification.document.type', "Document Type", required=True)
+        'certification.document.type', "Document Type", required=True,
+        states={
+            'readonly': Eval('state') != 'waiting-approval',
+        }, depends=['state'])
     type = fields.Function(fields.Char('Type'),
         'on_change_with_type')
     text = fields.Char('Text', states={
+        'readonly': Eval('state') != 'waiting-approval',
         'invisible': Eval('type') != 'text',
         'required': And(
+                ~Bool(Eval('certification_not_available')),
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'text')
         }, depends=['type'])
     attachment = fields.Binary('Attachment', states={
+        'readonly': Eval('state') != 'waiting-approval',
         'invisible': Eval('type') != 'attachment',
         'required': And(
+                ~Bool(Eval('certification_not_available')),
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'attachment')
         }, depends=['type'])
     selection = fields.Many2One('certification.selection.choice', 'Selection',
-        domain=[(
-            'id', 'in', Eval('choices')
-        )],
-        states={
+        domain=[
+            ('id', 'in', Eval('choices')),
+        ], states={
+            'readonly': Eval('state') != 'waiting-approval',
             'invisible': Eval('type') != 'selection',
             'required': And(
+                ~Bool(Eval('certification_not_available')),
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'selection')
         }, depends=['type', 'choices'])
@@ -42,8 +53,10 @@ class Document(Workflow, ModelSQL, ModelView):
     expiration_date = fields.Date('Expiration Date',
         states={
             'readonly': Eval('state') != 'waiting-approval',
-            'required': And(Eval('state') != 'waiting-approval', Bool(
-                Eval('required_expiration_date'))),
+            'required': And(
+                ~Bool(Eval('certification_not_available')),
+                Eval('state') != 'waiting-approval',
+                Bool(Eval('required_expiration_date'))),
         }, depends=['state', 'required_expiration_date'])
     state = fields.Selection([
             ('waiting-approval', 'Waiting Approval'),
@@ -54,6 +67,10 @@ class Document(Workflow, ModelSQL, ModelView):
     required_expiration_date = fields.Function(
         fields.Boolean('Required Expiration Date'),
         'on_change_with_required_expiration_date')
+    certification_not_available = fields.Boolean('Not Available',
+        states={
+            'readonly': Eval('state') != 'waiting-approval',
+        }, depends=['state'])
 
     @classmethod
     def __setup__(cls):
@@ -212,10 +229,20 @@ class PartyTypeParty(ModelSQL, ModelView):
             if line.required:
                 required_documents.add(line.document_type.id)
 
+        # update required documents in case has not available and substitute
         for document in self.party.documents:
-            if (document.state == 'approved' and
-                    document.document_type.id in required_documents):
-                required_documents.remove(document.document_type.id)
+            document_type_id = document.document_type.id
+            if (document.state == 'approved'
+                    and document_type_id in required_documents
+                    and document.certification_not_available):
+                required_documents.remove(document_type_id)
+                required_documents.add(document.document_type.substitute.id)
+
+        for document in self.party.documents:
+            document_type_id = document.document_type.id
+            if (document.state == 'approved'
+                    and document_type_id in required_documents):
+                required_documents.remove(document_type_id)
 
         if not required_documents:
             return True
