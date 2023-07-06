@@ -1,8 +1,6 @@
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.model import ModelView
-from trytond.i18n import gettext
-from trytond.exceptions import UserError
 
 
 class Party(metaclass=PoolMeta):
@@ -38,34 +36,28 @@ class Party(metaclass=PoolMeta):
         pool = Pool()
         Document = pool.get('certification.document')
 
-        to_delete = []
         documents = []
+        to_delete = []
         for party in parties:
             current_types = [
                 d.document_type for d in party.documents
                 if d.state in ['waiting-approval', 'approved']
                 ]
+
             expected_types = set()
             for party_type in party.party_types:
                 for document_type in party_type.document_types:
-                    doc_type = document_type.document_type
-                    expected_types.add(doc_type)
+                    expected_types.add(document_type.document_type)
+                    if document_type.document_type.substitute:
+                        expected_types.add(document_type.document_type.substitute)
 
             for document in party.documents:
-                if document.certification_not_available:
-                    doc_type = document.document_type.substitute
-                    if not doc_type:
-                        raise UserError(
-                            gettext('party_certification.msg_missign_document_type',
-                            document_type=document.document_type.rec_name,
-                            party=party.rec_name))
-                    expected_types.add(doc_type)
-
                 if (not document.text
                         and not document.attachment
                         and not document.selection
                         and document.document_type not in expected_types):
                     to_delete.append(document)
+            Document.delete(to_delete)
 
             for document_type in expected_types:
                 if document_type not in current_types:
@@ -73,9 +65,9 @@ class Party(metaclass=PoolMeta):
                     document.document_type = document_type
                     document.party = party
                     document.state = 'waiting-approval'
-                    document.type = document_type.type
-                    documents.append(document)
+                    # document.type = document_type.type
                     # party.documents += (document,)
+                    documents.append(document)
 
         Document.delete(to_delete)
         Document.save(documents)

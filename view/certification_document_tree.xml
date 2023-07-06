@@ -6,5 +6,4 @@
     <field name="document_type"/>
     <field name="state"/>
     <field name="expiration_date"/>
-    <field name="certification_not_available"/>
 </tree>

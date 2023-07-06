@@ -24,7 +24,6 @@ class Document(Workflow, ModelSQL, ModelView):
         'readonly': Eval('state') != 'waiting-approval',
         'invisible': Eval('type') != 'text',
         'required': And(
-                ~Bool(Eval('certification_not_available')),
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'text')
         }, depends=['type'])
@@ -32,7 +31,6 @@ class Document(Workflow, ModelSQL, ModelView):
         'readonly': Eval('state') != 'waiting-approval',
         'invisible': Eval('type') != 'attachment',
         'required': And(
-                ~Bool(Eval('certification_not_available')),
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'attachment')
         }, depends=['type'])
@@ -43,7 +41,6 @@ class Document(Workflow, ModelSQL, ModelView):
             'readonly': Eval('state') != 'waiting-approval',
             'invisible': Eval('type') != 'selection',
             'required': And(
-                ~Bool(Eval('certification_not_available')),
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'selection')
         }, depends=['type', 'choices'])
@@ -54,7 +51,6 @@ class Document(Workflow, ModelSQL, ModelView):
         states={
             'readonly': Eval('state') != 'waiting-approval',
             'required': And(
-                ~Bool(Eval('certification_not_available')),
                 Eval('state') != 'waiting-approval',
                 Bool(Eval('required_expiration_date'))),
         }, depends=['state', 'required_expiration_date'])
@@ -67,10 +63,6 @@ class Document(Workflow, ModelSQL, ModelView):
     required_expiration_date = fields.Function(
         fields.Boolean('Required Expiration Date'),
         'on_change_with_required_expiration_date')
-    certification_not_available = fields.Boolean('Not Available',
-        states={
-            'readonly': Eval('state') != 'waiting-approval',
-        }, depends=['state'])
 
     @classmethod
     def __setup__(cls):
@@ -120,8 +112,8 @@ class Document(Workflow, ModelSQL, ModelView):
             if document.expiration_date:
                 if document.expiration_date < today:
                     raise UserError(gettext(
-                        'party_certification.expired_document',
-                        document=document))
+                        'party_certification.msg_expired_document',
+                        document=document.rec_name))
 
     @classmethod
     @ModelView.button
@@ -224,25 +216,38 @@ class PartyTypeParty(ModelSQL, ModelView):
     valid = fields.Function(fields.Boolean('Valid'), 'is_valid')
 
     def is_valid(self, name):
+        pool = Pool()
+        Date = pool.get('ir.date')
+
+        today = Date.today()
+
         required_documents = set()
-        for line in self.party_type.document_types:
-            if line.required:
-                required_documents.add(line.document_type.id)
-
-        # update required documents in case has not available and substitute
-        for document in self.party.documents:
-            document_type_id = document.document_type.id
-            if (document.state == 'approved'
-                    and document_type_id in required_documents
-                    and document.certification_not_available):
-                required_documents.remove(document_type_id)
-                required_documents.add(document.document_type.substitute.id)
+        required_substitute = {}
+        for document_type in self.party_type.document_types:
+            if document_type.required:
+                document_type_id = document_type.document_type.id
+                required_documents.add(document_type_id)
+                if document_type.document_type.substitute:
+                    sub_doc_type_id = document_type.document_type.substitute.id
+                    required_substitute[sub_doc_type_id] = document_type_id
 
         for document in self.party.documents:
             document_type_id = document.document_type.id
-            if (document.state == 'approved'
-                    and document_type_id in required_documents):
+            if (document.state == 'approved' and
+                    document_type_id in required_documents):
+                # in case has expiration_date, not valid
+                if document.expiration_date and document.expiration_date < today:
+                    continue
                 required_documents.remove(document_type_id)
+
+            # remove in case has approved document is required and has substitute
+            document_type_parent_id = required_substitute.get(document_type_id)
+            if (document.state == 'approved' and
+                    document_type_parent_id in required_documents):
+                # in case has expiration_date, not valid
+                if document.expiration_date and document.expiration_date < today:
+                    continue
+                required_documents.remove(document_type_parent_id)
 
         if not required_documents:
             return True

@@ -1,6 +1,6 @@
 <tryton>
     <data grouped="1">
-        <record model="ir.message" id="expired_document">
+        <record model="ir.message" id="msg_expired_document">
             <field name="text">Document "%(document)s" is expired</field>
         </record>
         <record model="ir.message" id="msg_missign_document_type">

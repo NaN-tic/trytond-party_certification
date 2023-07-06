@@ -159,9 +159,9 @@ msgctxt "model:ir.action,name:act_certification_party"
 msgid "Party Type"
 msgstr "Tipo de tercero"
 
-msgctxt "model:ir.message,text:expired_document"
+msgctxt "model:ir.message,text:msg_expired_document"
 msgid "Document \"%(document)s\" is expired"
-msgstr "El Documento \"&(document)s\" está caducado"
+msgstr "El documento \"%(document)s\" está caducado"
 
 msgctxt "model:ir.model.button,string:certification_document_approve_button"
 msgid "Approve"

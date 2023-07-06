@@ -159,21 +159,21 @@ msgctxt "model:ir.action,name:act_certification_party"
 msgid "Party Type"
 msgstr "Tipus de tercer"
 
-msgctxt "model:ir.message,text:expired_document"
+msgctxt "model:ir.message,text:msg_expired_document"
 msgid "Document \"%(document)s\" is expired"
 msgstr "El document \"%(document)s\" està caducat"
 
 msgctxt "model:ir.model.button,string:certification_document_approve_button"
 msgid "Approve"
-msgstr "Aprovar"
+msgstr "Aprova"
 
 msgctxt "model:ir.model.button,string:certification_document_expire_button"
 msgid "Expire"
-msgstr "Caducar"
+msgstr "Caduca"
 
 msgctxt "model:ir.model.button,string:certification_document_reject_button"
 msgid "Reject"
-msgstr "Rebutjar"
+msgstr "Rebutja"
 
 msgctxt "model:ir.model.button,string:generate_party_documents_button"
 msgid "Generate Documents"

@@ -8,8 +8,6 @@
     <field name="document_type"/>
     <label name="expiration_date"/>
     <field name="expiration_date"/>
-    <label name="certification_not_available"/>
-    <field name="certification_not_available"/>
     <newline/>
     <label name="text"/>
     <field name="text"/>
