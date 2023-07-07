@@ -221,37 +221,33 @@ class PartyTypeParty(ModelSQL, ModelView):
 
         today = Date.today()
 
-        required_documents = set()
-        required_substitute = {}
-        for document_type in self.party_type.document_types:
-            if document_type.required:
-                document_type_id = document_type.document_type.id
-                required_documents.add(document_type_id)
-                if document_type.document_type.substitute:
-                    sub_doc_type_id = document_type.document_type.substitute.id
-                    required_substitute[sub_doc_type_id] = document_type_id
-
-        for document in self.party.documents:
-            document_type_id = document.document_type.id
-            if (document.state == 'approved' and
-                    document_type_id in required_documents):
-                # in case has expiration_date, not valid
-                if document.expiration_date and document.expiration_date < today:
-                    continue
-                required_documents.remove(document_type_id)
-
-            # remove in case has approved document is required and has substitute
-            document_type_parent_id = required_substitute.get(document_type_id)
-            if (document.state == 'approved' and
-                    document_type_parent_id in required_documents):
-                # in case has expiration_date, not valid
-                if document.expiration_date and document.expiration_date < today:
-                    continue
-                required_documents.remove(document_type_parent_id)
-
-        if not required_documents:
+        def _is_approved(document):
+            if document.expiration_date and document.expiration_date < today:
+                return False
+            if document.state != 'approved':
+                return False
             return True
-        return False
+
+        required_documents = set()
+        required_party_documents = set()
+        for document_type in self.party_type.document_types:
+            if not document_type.required:
+                continue
+            required_documents.add(document_type.document_type)
+
+            for document in self.party.documents:
+                if ( (document.document_type == document_type.document_type)
+                        and _is_approved(document) ):
+                    required_party_documents.add(document_type.document_type)
+
+                if (document_type.document_type.substitute
+                        and document.document_type != document_type.document_type.substitute
+                        and _is_approved(document)):
+                    required_party_documents.add(document_type.document_type)
+
+        if len(required_documents) != len(required_party_documents):
+            return False
+        return True
 
 
 class Cron(metaclass=PoolMeta):
