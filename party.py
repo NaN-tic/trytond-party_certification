@@ -26,7 +26,7 @@ class Party(metaclass=PoolMeta):
         party_types = PartyTypeParty.search(['party', '=', self.id])
         for party_type in party_types:
             if not party_type.valid:
-                break
+                return False
         else:
             return True
 
