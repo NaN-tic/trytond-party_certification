@@ -228,25 +228,17 @@ class PartyTypeParty(ModelSQL, ModelView):
                 return False
             return True
 
-        required_documents = set()
-        required_party_documents = set()
         for document_type in self.party_type.document_types:
             if not document_type.required:
                 continue
-            required_documents.add(document_type.document_type)
-
             for document in self.party.documents:
-                if ( (document.document_type == document_type.document_type)
-                        and _is_approved(document) ):
-                    required_party_documents.add(document_type.document_type)
-
-                if (document_type.document_type.substitute
-                        and document.document_type != document_type.document_type.substitute
-                        and _is_approved(document)):
-                    required_party_documents.add(document_type.document_type)
-
-        if len(required_documents) != len(required_party_documents):
-            return False
+                if ((document.document_type != document_type.document_type)
+                        and (document.document_type != document_type.document_type.substitute)):
+                    continue
+                if _is_approved(document) :
+                    break
+            else:
+                return False
         return True
 
 
