@@ -9,28 +9,36 @@ from trytond.i18n import gettext
 class Document(Workflow, ModelSQL, ModelView):
     "Certification Document"
     __name__ = 'certification.document'
-    party = fields.Many2One('party.party', "Party", required=True)
+    party = fields.Many2One('party.party', "Party", required=True,
+        states={
+            'readonly': Eval('state') != 'waiting-approval',
+        }, depends=['state'])
     document_type = fields.Many2One(
-        'certification.document.type', "Document Type", required=True)
+        'certification.document.type', "Document Type", required=True,
+        states={
+            'readonly': Eval('state') != 'waiting-approval',
+        }, depends=['state'])
     type = fields.Function(fields.Char('Type'),
         'on_change_with_type')
     text = fields.Char('Text', states={
+        'readonly': Eval('state') != 'waiting-approval',
         'invisible': Eval('type') != 'text',
         'required': And(
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'text')
         }, depends=['type'])
     attachment = fields.Binary('Attachment', states={
+        'readonly': Eval('state') != 'waiting-approval',
         'invisible': Eval('type') != 'attachment',
         'required': And(
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'attachment')
         }, depends=['type'])
     selection = fields.Many2One('certification.selection.choice', 'Selection',
-        domain=[(
-            'id', 'in', Eval('choices')
-        )],
-        states={
+        domain=[
+            ('id', 'in', Eval('choices')),
+        ], states={
+            'readonly': Eval('state') != 'waiting-approval',
             'invisible': Eval('type') != 'selection',
             'required': And(
                 Eval('state') != 'waiting-approval',
@@ -42,8 +50,9 @@ class Document(Workflow, ModelSQL, ModelView):
     expiration_date = fields.Date('Expiration Date',
         states={
             'readonly': Eval('state') != 'waiting-approval',
-            'required': And(Eval('state') != 'waiting-approval', Bool(
-                Eval('required_expiration_date'))),
+            'required': And(
+                Eval('state') != 'waiting-approval',
+                Bool(Eval('required_expiration_date'))),
         }, depends=['state', 'required_expiration_date'])
     state = fields.Selection([
             ('waiting-approval', 'Waiting Approval'),
@@ -103,8 +112,8 @@ class Document(Workflow, ModelSQL, ModelView):
             if document.expiration_date:
                 if document.expiration_date < today:
                     raise UserError(gettext(
-                        'party_certification.expired_document',
-                        document=document))
+                        'party_certification.msg_expired_document',
+                        document=document.rec_name))
 
     @classmethod
     @ModelView.button
@@ -156,7 +165,11 @@ class DocumentType(ModelSQL, ModelView):
             'invisible': Eval('type') != 'selection',
             'required': Eval('type') == 'selection'
         },
-        depends=['type'],)
+        depends=['type'])
+    substitute = fields.Many2One('certification.document.type', 'Substitute',
+        domain=[
+            ('id', '!=', Eval('id', -1)),
+        ], depends=['id'])
 
 
 class DocumentTypePartyType(ModelSQL, ModelView):
@@ -203,19 +216,30 @@ class PartyTypeParty(ModelSQL, ModelView):
     valid = fields.Function(fields.Boolean('Valid'), 'is_valid')
 
     def is_valid(self, name):
-        required_documents = set()
-        for line in self.party_type.document_types:
-            if line.required:
-                required_documents.add(line.document_type.id)
+        pool = Pool()
+        Date = pool.get('ir.date')
 
-        for document in self.party.documents:
-            if (document.state == 'approved' and
-                    document.document_type.id in required_documents):
-                required_documents.remove(document.document_type.id)
+        today = Date.today()
 
-        if not required_documents:
+        def _is_approved(document):
+            if document.expiration_date and document.expiration_date < today:
+                return False
+            if document.state != 'approved':
+                return False
             return True
-        return False
+
+        for document_type in self.party_type.document_types:
+            if not document_type.required:
+                continue
+            for document in self.party.documents:
+                if ((document.document_type != document_type.document_type)
+                        and (document.document_type != document_type.document_type.substitute)):
+                    continue
+                if _is_approved(document) :
+                    break
+            else:
+                return False
+        return True
 
 
 class Cron(metaclass=PoolMeta):

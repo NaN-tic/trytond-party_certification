@@ -6,6 +6,8 @@
     <field name="name"/>
     <label name="type"/>
     <field name="type"/>
+    <label name="substitute"/>
+    <field name="substitute"/>
     <newline/>
     <field name="selection_choices" colspan="2"/>
 </form>

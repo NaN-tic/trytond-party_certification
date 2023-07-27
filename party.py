@@ -23,30 +23,35 @@ class Party(metaclass=PoolMeta):
         pool = Pool()
         PartyTypeParty = pool.get('certification.party.type-party.party')
 
-        data = PartyTypeParty.search(['party', '=', self.id])
-        for type in data:
-            if not type.valid:
-                break
+        party_types = PartyTypeParty.search(['party', '=', self.id])
+        for party_type in party_types:
+            if not party_type.valid:
+                return False
         else:
             return True
 
     @classmethod
     @ModelView.button
-    def generate_party_documents(cls, records):
+    def generate_party_documents(cls, parties):
         pool = Pool()
         Document = pool.get('certification.document')
-        for record in records:
-            to_delete = []
+
+        documents = []
+        to_delete = []
+        for party in parties:
             current_types = [
-                d.document_type for d in record.documents
+                d.document_type for d in party.documents
                 if d.state in ['waiting-approval', 'approved']
                 ]
-            expected_types = []
-            for party_type in record.party_types:
-                for document_type in party_type.document_types:
-                    expected_types.append(document_type.document_type)
 
-            for document in record.documents:
+            expected_types = set()
+            for party_type in party.party_types:
+                for document_type in party_type.document_types:
+                    expected_types.add(document_type.document_type)
+                    if document_type.document_type.substitute:
+                        expected_types.add(document_type.document_type.substitute)
+
+            for document in party.documents:
                 if (not document.text
                         and not document.attachment
                         and not document.selection
@@ -57,9 +62,12 @@ class Party(metaclass=PoolMeta):
             for document_type in expected_types:
                 if document_type not in current_types:
                     document = Document()
-                    document.document_type = document_type.id
-                    document.party = record.id
+                    document.document_type = document_type
+                    document.party = party
                     document.state = 'waiting-approval'
-                    document.type = document_type.type
-                    record.documents += (document,)
-        cls.save(records)
+                    # document.type = document_type.type
+                    # party.documents += (document,)
+                    documents.append(document)
+
+        Document.delete(to_delete)
+        Document.save(documents)

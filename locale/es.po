@@ -50,6 +50,10 @@ msgctxt "field:certification.document.type,selection_choices:"
 msgid "Selection Choices"
 msgstr "Opciones de selección"
 
+msgctxt "field:certification.document.type,substitute:"
+msgid "Substitute"
+msgstr "Substituto"
+
 msgctxt "field:certification.document.type,type:"
 msgid "Type"
 msgstr "Tipo"
@@ -159,9 +163,13 @@ msgctxt "model:ir.action,name:act_certification_party"
 msgid "Party Type"
 msgstr "Tipo de tercero"
 
-msgctxt "model:ir.message,text:expired_document"
+msgctxt "model:ir.message,text:msg_expired_document"
 msgid "Document \"%(document)s\" is expired"
-msgstr "El Documento \"&(document)s\" está caducado"
+msgstr "El documento \"%(document)s\" está caducado"
+
+msgctxt "model:ir.message,text:msg_missign_document_type"
+msgid "Missing document type \"%(document_type)s\" in the \"%(party)s\""
+msgstr "Falta el tipo de documento \"%(document_type)s\" en el tercero \"%(party)s\""
 
 msgctxt "model:ir.model.button,string:certification_document_approve_button"
 msgid "Approve"
