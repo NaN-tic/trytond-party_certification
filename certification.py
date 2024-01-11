@@ -19,13 +19,13 @@ class Document(Workflow, ModelSQL, ModelView):
         'required': And(
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'text')
-        }, depends=['type'])
+        })
     attachment = fields.Binary('Attachment', states={
         'invisible': Eval('type') != 'attachment',
         'required': And(
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'attachment')
-        }, depends=['type'])
+        })
     selection = fields.Many2One('certification.selection.choice', 'Selection',
         domain=[(
             'id', 'in', Eval('choices')
@@ -35,7 +35,7 @@ class Document(Workflow, ModelSQL, ModelView):
             'required': And(
                 Eval('state') != 'waiting-approval',
                 Eval('type') == 'selection')
-        }, depends=['type', 'choices'])
+        })
     choices = fields.Function(fields.Many2Many(
         'certification.selection.choice', None, None, 'Choices'),
         'on_change_with_choices')
@@ -44,7 +44,7 @@ class Document(Workflow, ModelSQL, ModelView):
             'readonly': Eval('state') != 'waiting-approval',
             'required': And(Eval('state') != 'waiting-approval', Bool(
                 Eval('required_expiration_date'))),
-        }, depends=['state', 'required_expiration_date'])
+        })
     state = fields.Selection([
             ('waiting-approval', 'Waiting Approval'),
             ('approved', 'Approved'),
