@@ -155,8 +155,7 @@ class DocumentType(ModelSQL, ModelView):
         states={
             'invisible': Eval('type') != 'selection',
             'required': Eval('type') == 'selection'
-        },
-        depends=['type'],)
+        })
 
 
 class DocumentTypePartyType(ModelSQL, ModelView):
