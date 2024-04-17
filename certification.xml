@@ -114,17 +114,17 @@
         <record model="ir.model.button" id="certification_document_approve_button">
             <field name="name">approve</field>
             <field name="string">Approve</field>
-            <field name="model" search="[('model', '=', 'certification.document')]"/>
+            <field name="model">certification.document</field>
         </record>
         <record model="ir.model.button" id="certification_document_reject_button">
             <field name="name">reject</field>
             <field name="string">Reject</field>
-            <field name="model" search="[('model', '=', 'certification.document')]"/>
+            <field name="model">certification.document</field>
         </record>
         <record model="ir.model.button" id="certification_document_expire_button">
             <field name="name">expire</field>
             <field name="string">Expire</field>
-            <field name="model" search="[('model', '=', 'certification.document')]"/>
+            <field name="model">certification.document</field>
         </record>
         <record model="ir.model.button-res.group" id="certification_document_approve_button_group_certification">
             <field name="button" ref="certification_document_approve_button" />
@@ -139,14 +139,14 @@
             <field name="group" ref="party_certification.group_certification_admin" />
         </record>
         <record model="ir.model.access" id="access_certification">
-            <field name="model" search="[('model', '=', 'certification.document')]" />
+            <field name="model">certification.document</field>
             <field name="perm_read" eval="True" />
             <field name="perm_write" eval="False" />
             <field name="perm_create" eval="False" />
             <field name="perm_delete" eval="False" />
         </record>
         <record model="ir.model.access" id="access_certification_admin">
-            <field name="model" search="[('model', '=', 'certification.document')]" />
+            <field name="model">certification.document</field>
             <field name="group" ref="group_certification_admin" />
             <field name="perm_read" eval="True" />
             <field name="perm_write" eval="True" />

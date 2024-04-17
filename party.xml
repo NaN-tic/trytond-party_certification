@@ -11,7 +11,7 @@
          <record model="ir.model.button" id="generate_party_documents_button">
             <field name="name">generate_party_documents</field>
             <field name="string">Generate Documents</field>
-            <field name="model" search="[('model', '=', 'party.party')]" />
+            <field name="model">party.party</field>
         </record>
     </data>
 </tryton>
